@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Foundation — Interactive Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F1117;--sf:#161B27;--card:#1C2333;--bd:#2A3347;--acc:#E8A020;--acc2:#3B82F6;--green:#22C55E;--red:#EF4444;--text:#E2E8F0;--muted:#64748B;--dim:#334155;--mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex;flex-direction:column}
+/* TOPBAR */
+.topbar{height:52px;background:var(--sf);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 24px;gap:20px;flex-shrink:0;z-index:20}
+.logo-mark{width:30px;height:30px;background:var(--acc);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:700;color:#000;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600}
+.logo-text span{color:var(--muted);font-weight:400}
+.tb-div{width:1px;height:22px;background:var(--bd)}
+.tb-nav{display:flex;gap:2px}
+.tb-nav a{font-size:12px;color:var(--muted);text-decoration:none;padding:5px 10px;border-radius:4px;cursor:pointer;transition:all .15s}
+.tb-nav a:hover{color:var(--text);background:var(--card)}
+.tb-nav a.active{color:var(--acc)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.prog-pill{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:4px 12px}
+.prog-pill-label{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.mini-bar{width:60px;height:3px;background:var(--dim);border-radius:2px}
+.mini-fill{height:100%;background:var(--acc);border-radius:2px;transition:width .5s}
+.prog-pct{font-size:11px;font-family:var(--mono);color:var(--acc)}
+/* LAYOUT */
+.layout{display:flex;flex:1;overflow:hidden}
+/* SIDEBAR */
+.sidebar{width:255px;background:var(--sf);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 0}
+.sb-scroll::-webkit-scrollbar{width:3px}
+.sb-scroll::-webkit-scrollbar-thumb{background:var(--bd)}
+.sb-section{padding:16px 12px 6px}
+.sb-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 8px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:5px;cursor:pointer;transition:all .15s;margin-bottom:1px}
+.nav-item:hover{background:var(--card)}
+.nav-item.active{background:rgba(232,160,32,.1)}
+.nav-item.active .nav-label,.nav-item.active .nav-ic{color:var(--acc)}
+.nav-ic{font-size:12px;width:16px;text-align:center;color:var(--muted);flex-shrink:0}
+.nav-label{font-size:12.5px;color:var(--text);flex:1}
+.nav-chk{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--dim);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px}
+.nav-chk.done{border-color:var(--green);background:rgba(34,197,94,.15);color:var(--green)}
+.sb-div{height:1px;background:var(--bd);margin:8px 12px}
+/* CONTENT */
+.content-area{flex:1;display:flex;overflow:hidden}
+.lesson-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.lh{padding:20px 28px 14px;border-bottom:1px solid var(--bd);flex-shrink:0;background:var(--sf)}
+.lh-bc{font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px}
+.lh-title{font-size:20px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.lh-meta{display:flex;align-items:center;gap:14px;margin-top:10px}
+.ltag{font-size:10px;font-family:var(--mono);font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+.tag-core{background:rgba(59,130,246,.15);color:var(--acc2)}
+.tag-script{background:rgba(168,85,247,.15);color:#A855F7}
+.tag-net{background:rgba(34,197,94,.15);color:var(--green)}
+.tag-sys{background:rgba(232,160,32,.15);color:var(--acc)}
+.tag-sec{background:rgba(239,68,68,.15);color:var(--red)}
+.tag-adv{background:rgba(239,68,68,.12);color:#F87171}
+.lh-time{font-size:11px;color:var(--muted)}
+.l-tabs{display:flex;border-bottom:1px solid var(--bd);background:var(--sf);padding:0 28px;flex-shrink:0}
+.l-tab{padding:10px 16px;font-size:12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px;font-weight:500}
+.l-tab:hover{color:var(--text)}
+.l-tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+.lesson-body{flex:1;overflow-y:auto;padding:28px}
+.lesson-body::-webkit-scrollbar{width:4px}
+.lesson-body::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+.lc{display:none;flex-direction:column;gap:18px}
+.lc.active{display:flex}
+/* PROSE */
+.prose{font-size:13.5px;line-height:1.8;color:#C8D6E5}
+.prose p{margin-bottom:12px}
+.prose h3{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.prose h3:first-child{margin-top:0}
+.prose ul{padding-left:20px}
+.prose li{margin-bottom:5px}
+.prose strong{color:var(--text);font-weight:600}
+.prose code{font-family:var(--mono);font-size:12px;background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:1px 6px;color:#7DD3FC}
+/* CODE BLOCK */
+.cb{background:#0A0D14;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.cb-header{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:var(--card);border-bottom:1px solid var(--bd)}
+.cb-lang{font-size:10px;font-family:var(--mono);font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.cb-copy{font-size:10px;color:var(--muted);cursor:pointer;padding:2px 8px;border-radius:3px;border:1px solid var(--bd);background:transparent;transition:all .15s;font-family:var(--sans)}
+.cb-copy:hover{color:var(--text);border-color:var(--muted)}
+.cb pre{padding:15px 18px;font-family:var(--mono);font-size:12px;line-height:1.75;overflow-x:auto;color:#A8B8CC}
+.cb pre .k{color:#7DD3FC}
+.cb pre .a{color:#86EFAC}
+.cb pre .o{color:#475569}
+.cb pre .c{color:#2D3F55}
+.cb pre .s{color:#FCA5A5}
+.cb pre .kw{color:#C4B5FD}
+.cb pre .n{color:var(--acc)}
+/* CALLOUTS */
+.callout{border-left:3px solid;border-radius:0 6px 6px 0;padding:11px 15px;font-size:13px;line-height:1.65}
+.c-info{border-color:var(--acc2);background:rgba(59,130,246,.06);color:#93C5FD}
+.c-warn{border-color:var(--acc);background:rgba(232,160,32,.06);color:#FCD34D}
+.c-danger{border-color:var(--red);background:rgba(239,68,68,.06);color:#FCA5A5}
+.c-tip{border-color:var(--green);background:rgba(34,197,94,.06);color:#86EFAC}
+.c-title{font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.75}
+/* NAV BTNS */
+.lnb-row{display:flex;justify-content:space-between;padding-top:24px;border-top:1px solid var(--bd);margin-top:8px}
+.lnb{padding:8px 18px;border-radius:5px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--bd);background:var(--card);color:var(--text);font-family:var(--sans)}
+.lnb:hover{border-color:var(--acc);color:var(--acc)}
+.lnb.primary{background:var(--acc);border-color:var(--acc);color:#000;font-weight:700}
+.lnb.primary:hover{background:#D4901C}
+.lnb:disabled{opacity:.3;cursor:not-allowed}
+/* QUIZ */
+.quiz-q{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:20px}
+.quiz-qnum{font-size:10px;font-family:var(--mono);font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.quiz-qtext{font-size:13.5px;line-height:1.65;margin-bottom:14px;color:var(--text)}
+.quiz-qtext code{font-family:var(--mono);font-size:12px;background:var(--sf);border:1px solid var(--bd);border-radius:3px;padding:1px 6px;color:#7DD3FC}
+.quiz-opts{display:flex;flex-direction:column;gap:6px}
+.quiz-opt{padding:9px 14px;border-radius:5px;border:1px solid var(--bd);background:var(--sf);color:var(--text);font-size:13px;cursor:pointer;text-align:left;transition:all .15s;font-family:var(--sans)}
+.quiz-opt:hover:not(:disabled){border-color:var(--acc2);background:rgba(59,130,246,.05)}
+.quiz-opt.correct{border-color:var(--green);background:rgba(34,197,94,.08);color:#86EFAC}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.08);color:#FCA5A5}
+.quiz-fb{margin-top:10px;padding:10px 14px;border-radius:5px;font-size:12.5px;line-height:1.6;display:none}
+.quiz-fb.show{display:block}
+.quiz-fb.ok{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);color:#86EFAC}
+.quiz-fb.fail{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);color:#FCA5A5}
+/* TERMINAL */
+.term-pane{width:400px;min-width:340px;display:flex;flex-direction:column;border-left:1px solid var(--bd);background:#0A0D14;flex-shrink:0}
+.term-tb{height:38px;background:var(--card);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0}
+.tdots{display:flex;gap:6px}
+.td{width:11px;height:11px;border-radius:50%}
+.tdr{background:#FF5F57}.tdy{background:#FFBD2E}.tdg{background:#28C840}
+.t-title{font-family:var(--mono);font-size:11px;color:var(--muted);flex:1;text-align:center}
+.t-acts{display:flex;gap:6px}
+.t-btn{font-size:10px;color:var(--muted);padding:2px 8px;border-radius:3px;border:1px solid var(--bd);background:transparent;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.t-btn:hover{color:var(--text);border-color:var(--muted)}
+.term-out{flex:1;overflow-y:auto;padding:14px 18px;font-family:var(--mono);font-size:12px;line-height:1.75}
+.term-out::-webkit-scrollbar{width:3px}
+.term-out::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+.tl{white-space:pre-wrap;word-break:break-all}
+.tp-u{color:#22C55E;font-weight:600}.tp-a{color:#2D3748}.tp-h{color:#3B82F6}.tp-p{color:#A78BFA}.tp-s{color:#22C55E}
+.t-cmd{color:#E2E8F0}.t-out{color:#475569}.t-g{color:#22C55E}.t-b{color:#60A5FA}.t-y{color:#FCD34D}.t-r{color:#F87171}.t-dim{color:#1E293B}
+.t-ai{padding:8px 16px;background:rgba(34,197,94,.03);border-top:1px solid rgba(34,197,94,.08);font-size:11px;font-family:var(--mono);color:#1E3A2A;min-height:34px;line-height:1.5;transition:color .3s}
+.t-ai.lit{color:#4ADE80}
+.t-row{display:flex;align-items:center;padding:10px 18px;border-top:1px solid #131820;flex-shrink:0}
+.t-prompt{font-family:var(--mono);font-size:12px;flex-shrink:0;white-space:nowrap}
+.t-inp{flex:1;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:var(--text);caret-color:#22C55E;padding:0 4px}
+/* CHAT */
+.chat-panel{position:fixed;bottom:0;right:0;width:400px;height:450px;background:var(--sf);border:1px solid var(--bd);border-bottom:none;border-radius:10px 10px 0 0;display:flex;flex-direction:column;z-index:30;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 -8px 40px rgba(0,0,0,.5)}
+.chat-panel.open{transform:translateY(0)}
+.chat-ph{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--bd);flex-shrink:0;cursor:pointer;user-select:none}
+.chat-ptitle{font-size:13px;font-weight:600;flex:1;display:flex;align-items:center;gap:8px}
+.chat-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.chat-x{font-size:16px;color:var(--muted);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px}
+.chat-x:hover{background:var(--card);color:var(--text)}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--bd)}
+.cm{display:flex;gap:8px;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.cm-av{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;font-weight:700;font-family:var(--mono)}
+.cm-av.ai{background:rgba(232,160,32,.15);color:var(--acc)}
+.cm-av.user{background:rgba(59,130,246,.15);color:var(--acc2)}
+.cm-body{flex:1}
+.cm-name{font-size:10px;color:var(--muted);font-family:var(--mono);margin-bottom:3px}
+.cm-text{font-size:13px;line-height:1.65;color:var(--text)}
+.cm-text code{font-family:var(--mono);font-size:11.5px;background:var(--card);border:1px solid var(--bd);border-radius:3px;padding:1px 5px;color:#7DD3FC}
+.cm-text pre{font-family:var(--mono);font-size:11.5px;background:#0A0D14;border:1px solid var(--bd);border-radius:5px;padding:10px 12px;margin-top:6px;overflow-x:auto;color:#86EFAC;line-height:1.65;white-space:pre}
+.cm-text strong{color:#93C5FD;font-weight:600}
+.t-ind{display:flex;gap:3px;padding:4px 0}
+.t-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);animation:tb 1.2s infinite}
+.t-dot:nth-child(2){animation-delay:.2s}.t-dot:nth-child(3){animation-delay:.4s}
+@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
+.chat-irow{padding:10px 12px;border-top:1px solid var(--bd);display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
+.chat-inp{flex:1;background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:8px 12px;color:var(--text);font-family:var(--sans);font-size:13px;resize:none;outline:none;min-height:38px;max-height:100px;line-height:1.5;transition:border-color .15s}
+.chat-inp:focus{border-color:var(--acc)}
+.chat-inp::placeholder{color:var(--muted)}
+.chat-send{width:36px;height:36px;background:var(--acc);border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;transition:all .15s;flex-shrink:0}
+.chat-send:hover{background:#D4901C}
+.chat-send:disabled{opacity:.35;cursor:not-allowed}
+.chat-toggle{position:fixed;bottom:24px;right:24px;width:46px;height:46px;background:var(--acc);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 20px rgba(232,160,32,.35);transition:all .2s;z-index:29}
+.chat-toggle:hover{transform:scale(1.08)}
+.chat-toggle.hidden{display:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo-mark">LF</div>
+  <div class="logo-text">Linux Foundation <span>/ Interactive</span></div>
+  <div class="tb-div"></div>
+  <nav class="tb-nav">
+    <a class="active">Learn</a><a>Labs</a><a>Reference</a><a>Certification</a>
+  </nav>
+  <div class="tb-right">
+    <div class="prog-pill">
+      <span class="prog-pill-label">Progress</span>
+      <div class="mini-bar"><div class="mini-fill" id="topProg" style="width:0%"></div></div>
+      <span class="prog-pct" id="topPct">0%</span>
+    </div>
+  </div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="sb-scroll" id="sidebarContent"></div>
+  </div>
+  <div class="content-area">
+    <div class="lesson-pane">
+      <div class="lh">
+        <div class="lh-bc" id="lBC">Linux Essentials › File System</div>
+        <div class="lh-title" id="lTitle">Linux File System Hierarchy</div>
+        <div class="lh-meta">
+          <span class="ltag tag-core" id="lTag">Core Concept</span>
+          <span class="lh-time" id="lTime">⏱ 15 min</span>
+        </div>
+      </div>
+      <div class="l-tabs">
+        <div class="l-tab active" onclick="switchLT('theory',this)">Theory</div>
+        <div class="l-tab" onclick="switchLT('lab',this)">Lab Exercise</div>
+        <div class="l-tab" onclick="switchLT('quiz',this)">Assessment</div>
+      </div>
+      <div class="lesson-body">
+        <div id="lc-theory" class="lc active"></div>
+        <div id="lc-lab" class="lc"></div>
+        <div id="lc-quiz" class="lc"></div>
+      </div>
+    </div>
+    <div class="term-pane">
+      <div class="term-tb">
+        <div class="tdots"><div class="td tdr"></div><div class="td tdy"></div><div class="td tdg"></div></div>
+        <div class="t-title">bash — user@linux-foundation</div>
+        <div class="t-acts">
+          <button class="t-btn" onclick="clearTerm()">clear</button>
+          <button class="t-btn" onclick="termHelp()">help</button>
+        </div>
+      </div>
+      <div class="term-out" id="termOut"></div>
+      <div class="t-ai" id="tHint">// Type a command and press Enter</div>
+      <div class="t-row">
+        <span class="t-prompt"><span class="tp-u">user</span><span class="tp-a">@</span><span class="tp-h">lf</span>:<span class="tp-p" id="tPath">~</span><span class="tp-s">$&nbsp;</span></span>
+        <input class="t-inp" id="tInp" autocomplete="off" spellcheck="false" onkeydown="htk(event)">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-ph" onclick="toggleChat()">
+    <div class="chat-ptitle"><div class="chat-dot"></div>AI Instructor</div>
+    <div class="chat-x">×</div>
+  </div>
+  <div class="chat-msgs" id="chatMsgs"></div>
+  <div class="chat-irow">
+    <textarea class="chat-inp" id="chatInp" placeholder="Ask about Linux..." rows="1" onkeydown="hck(event)"></textarea>
+    <button class="chat-send" id="chatSend" onclick="sendChat()">↑</button>
+  </div>
+</div>
+<button class="chat-toggle" id="chatTgl" onclick="toggleChat()">🤖</button>
+<script>
+
+// ── STATE ──────────────────────────────────────────────────────
+const S={lesson:'filesystem',done:new Set(),total:12,aiThinking:false,chatHist:[],chatOpen:false,cwd:'/home/user',th:[],hi:-1};
+
+// ── SIDEBAR DATA ───────────────────────────────────────────────
+const NAV=[
+  {section:'Essentials',items:[
+    {id:'filesystem',label:'File System Hierarchy'},
+    {id:'navigation',label:'Navigation & Paths'},
+    {id:'files',label:'File Operations'},
+    {id:'text',label:'Text Processing'},
+  ]},
+  {section:'System',items:[
+    {id:'permissions',label:'Permissions & Ownership'},
+    {id:'processes',label:'Processes & Signals'},
+    {id:'pipes',label:'Pipes & Redirection'},
+    {id:'systemd',label:'systemd & Services'},
+  ]},
+  {section:'Networking',items:[
+    {id:'networking',label:'Network Fundamentals'},
+    {id:'ssh',label:'SSH & Remote Access'},
+  ]},
+  {section:'Scripting',items:[
+    {id:'bash',label:'Bash Scripting'},
+    {id:'regex',label:'grep, awk & sed'},
+  ]},
+  {section:'Advanced',items:[
+    {id:'storage',label:'Disk & Storage'},
+    {id:'security',label:'Security Hardening'},
+  ]},
+];
+
+function buildSidebar(){
+  let h='';
+  NAV.forEach(sec=>{
+    h+=`<div class="sb-section"><div class="sb-label">${sec.section}</div>`;
+    sec.items.forEach(it=>{
+      h+=`<div class="nav-item" id="nav-${it.id}" onclick="loadLesson('${it.id}')">
+        <span class="nav-ic">▸</span>
+        <span class="nav-label">${it.label}</span>
+        <span class="nav-chk" id="chk-${it.id}"></span>
+      </div>`;
+    });
+    h+='</div><div class="sb-div"></div>';
+  });
+  document.getElementById('sidebarContent').innerHTML=h;
+}
+
+// ── LESSON DEFINITIONS ─────────────────────────────────────────
+const cb=(lang,code)=>`<div class="cb"><div class="cb-header"><span class="cb-lang">${lang}</span><button class="cb-copy" onclick="copyCode(this)">Copy</button></div><pre>${code}</pre></div>`;
+const callout=(type,title,body)=>`<div class="callout c-${type}"><div class="c-title">${title}</div>${body}</div>`;
+const navBtns=(prev,nextId,nextLabel)=>`<div class="lnb-row"><button class="lnb" ${prev?`onclick="loadLesson('${prev}')"`:'disabled'}>← Previous</button><button class="lnb primary" onclick="${nextId?`markDone('${S.lesson}','${nextId}')`:`markDone('${S.lesson}',null)`}">${nextLabel||'Mark Complete & Continue →'}</button></div>`;
+
+const LESSONS={
+filesystem:{
+  title:'Linux File System Hierarchy',bc:'Linux Essentials › File System',tag:'Core Concept',tc:'tag-core',time:'15 min',
+  prev:null,next:'navigation',
+  theory:`<div class="prose"><h3>The Filesystem Hierarchy Standard (FHS)</h3>
+<p>Linux organizes all files in a single <strong>unified directory tree</strong> rooted at <code>/</code>. Every storage device mounts somewhere within this tree.</p></div>`+
+cb('filesystem',`<span class="k">/</span>                    <span class="c"># Root — top of the tree</span>
+├── <span class="a">bin</span>             <span class="c"># Essential binaries (ls, cp, bash)</span>
+├── <span class="a">boot</span>            <span class="c"># Bootloader, kernel images</span>
+├── <span class="a">dev</span>             <span class="c"># Device files (disks, terminals)</span>
+├── <span class="a">etc</span>             <span class="c"># System-wide configuration</span>
+├── <span class="a">home</span>            <span class="c"># User home directories</span>
+├── <span class="a">proc</span>            <span class="c"># Virtual FS: kernel/process info</span>
+├── <span class="a">tmp</span>             <span class="c"># Temporary files (cleared at reboot)</span>
+├── <span class="a">usr</span>             <span class="c"># User programs and shared data</span>
+└── <span class="a">var</span>             <span class="c"># Variable data: logs, databases</span>`)+
+`<div class="prose"><h3>Key Directories</h3><ul>
+<li><code>/etc</code> — All system config: <code>/etc/hosts</code>, <code>/etc/fstab</code>, <code>/etc/passwd</code></li>
+<li><code>/proc</code> — Virtual FS. <code>cat /proc/cpuinfo</code> reads live kernel data — no disk I/O</li>
+<li><code>/var/log</code> — System and application logs. First stop when debugging</li>
+<li><code>/dev</code> — Device files. <code>/dev/null</code> discards all input; <code>/dev/sda</code> is your disk</li></ul></div>`+
+callout('info','Everything is a File','On Linux, hardware devices (<code>/dev/sda</code>), network sockets, and processes (<code>/proc/1234</code>) are all represented as files.')+
+`<div class="prose"><h3>Absolute vs Relative Paths</h3>
+<p>An <strong>absolute path</strong> starts with <code>/</code>: &nbsp;<code>/home/user/projects/app.py</code></p>
+<p>A <strong>relative path</strong> starts from your current location: &nbsp;<code>projects/app.py</code> &nbsp;or &nbsp;<code>../config/settings.json</code></p></div>`+
+callout('tip','Try it now','Type <code>ls /</code> in the terminal to see the root, then <code>cat /etc/hosts</code>.')+
+`<div class="lnb-row"><button class="lnb" disabled>← Previous</button><button class="lnb primary" onclick="markDone('filesystem','navigation')">Mark Complete & Continue →</button></div>`,
+  lab:`<div class="prose"><h3>Lab: Explore the File System</h3></div>`+callout('warn','Objective','Explore the Linux directory structure. Run each command in the terminal and observe the output.')+
+cb('bash',`<span class="k">ls /</span>                   <span class="c"># View root directory</span>
+<span class="k">ls /etc</span>               <span class="c"># Configuration files</span>
+<span class="k">cat /etc/hosts</span>        <span class="c"># Hostname mappings</span>
+<span class="k">cat /proc/cpuinfo</span>     <span class="c"># Live CPU info from kernel</span>
+<span class="k">cat /proc/version</span>     <span class="c"># Kernel version`)+
+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Take Assessment →</button></div>`,
+  quiz:[
+    {q:'Which directory contains system-wide configuration files?',opts:['/bin','/etc','/usr','/var'],c:1,exp:'<code>/etc</code> is the standard FHS location for all system-wide configuration files.'},
+    {q:'What does /proc represent?',opts:['Processor binaries','A virtual FS exposing kernel/process info','Archived program data','Package cache'],c:1,exp:'<code>/proc</code> is a virtual filesystem — files like <code>/proc/cpuinfo</code> deliver live kernel data, not disk content.'},
+    {q:'Which path is absolute?',opts:['projects/app.py','../config','.bashrc','/home/user/projects/app.py'],c:3,exp:'Absolute paths begin with <code>/</code> and are unambiguous from any working directory.'},
+  ]
+},
+navigation:{
+  title:'Navigation & Paths',bc:'Linux Essentials › Navigation',tag:'Core Concept',tc:'tag-core',time:'10 min',
+  prev:'filesystem',next:'files',
+  theory:`<div class="prose"><h3>Navigation Commands</h3><p>Master these and you'll move through any Linux system with confidence.</p></div>`+
+cb('bash',`<span class="k">pwd</span>                      <span class="c"># Print Working Directory</span>
+<span class="o">/home/user</span>
+
+<span class="k">cd /var/log</span>              <span class="c"># Absolute path</span>
+<span class="k">cd ../ </span>                  <span class="c"># One level up</span>
+<span class="k">cd ~</span>                     <span class="c"># Home directory shortcut</span>
+<span class="k">cd -</span>                     <span class="c"># Toggle to previous directory</span>
+
+<span class="k">ls</span>                       <span class="c"># List current directory</span>
+<span class="k">ls -la /etc</span>              <span class="c"># Long format + hidden files</span>
+<span class="k">ls -lh /var/log</span>          <span class="c"># Human-readable sizes</span>`)+
+`<div class="prose"><h3>Reading ls -la Output</h3></div>`+
+cb('output',`<span class="o">drwxr-xr-x  2 user users  4096 Jun 27 projects/</span>
+<span class="o">-rw-r--r--  1 user users   512 Jun 27 notes.txt</span>
+<span class="c"># |perms|links|owner|group|size|date|name</span>`)+
+callout('tip','Tab Completion','Press <strong>Tab</strong> to autocomplete paths. Press it twice to see all matches. This is the single most time-saving habit in terminal work.')+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('filesystem')">← Previous</button><button class="lnb primary" onclick="markDone('navigation','files')">Mark Complete & Continue →</button></div>`,
+  lab:callout('warn','Objective','Practice navigation shortcuts and understand ls output.')+
+cb('bash',`<span class="k">cd /etc && pwd</span>
+<span class="k">ls -la | head -10</span>
+<span class="k">cd -</span>                     <span class="c"># Return to previous location</span>
+<span class="k">ls -lh ~/projects</span>`)+
+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Take Assessment →</button></div>`,
+  quiz:[
+    {q:'What does <code>cd -</code> do?',opts:['Goes to root','Goes to parent','Returns to previous directory','Clears terminal'],c:2,exp:'<code>cd -</code> toggles between current and last directory — invaluable when switching between two locations.'},
+    {q:'Which ls flag shows hidden files?',opts:['-l','-h','-a','-r'],c:2,exp:'<code>ls -a</code> shows all files, including hidden ones starting with a dot (e.g. <code>.bashrc</code>).'},
+  ]
+},
+files:{
+  title:'File Operations',bc:'Linux Essentials › Files',tag:'Core Concept',tc:'tag-core',time:'20 min',
+  prev:'navigation',next:'text',
+  theory:`<div class="prose"><h3>Creating and Managing Files</h3></div>`+
+cb('bash',`<span class="c"># Create</span>
+<span class="k">touch</span> <span class="a">newfile.txt</span>        <span class="c"># Create empty file</span>
+<span class="k">mkdir</span> <span class="a">mydir</span>              <span class="c"># New directory</span>
+<span class="k">mkdir -p</span> <span class="a">a/b/c</span>          <span class="c"># Create all parents</span>
+
+<span class="c"># Copy & Move</span>
+<span class="k">cp</span> <span class="a">file.txt backup.txt</span>  <span class="c"># Copy</span>
+<span class="k">cp -r</span> <span class="a">dir/ dir_bak/</span>      <span class="c"># Recursive copy</span>
+<span class="k">mv</span> <span class="a">old.txt new.txt</span>      <span class="c"># Rename</span>
+<span class="k">mv</span> <span class="a">file.txt /tmp/</span>        <span class="c"># Move</span>
+
+<span class="c"># Delete</span>
+<span class="k">rm</span> <span class="a">file.txt</span>              <span class="c"># Remove file (permanent)</span>
+<span class="k">rm -r</span> <span class="a">directory/</span>         <span class="c"># Remove directory recursively</span>`)+
+callout('danger','No Recycle Bin','<code>rm</code> is permanent and immediate. There is no undo. Double-check before removing anything important.')+
+`<div class="prose"><h3>Reading File Contents</h3></div>`+
+cb('bash',`<span class="k">cat</span> <span class="a">file.txt</span>             <span class="c"># Print entire file</span>
+<span class="k">less</span> <span class="a">file.txt</span>            <span class="c"># Scrollable viewer (q = quit)</span>
+<span class="k">head -20</span> <span class="a">file.txt</span>        <span class="c"># First 20 lines</span>
+<span class="k">tail -50</span> <span class="a">file.txt</span>        <span class="c"># Last 50 lines</span>
+<span class="k">tail -f</span> <span class="a">/var/log/syslog</span> <span class="c"># Follow live output</span>`)+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('navigation')">← Previous</button><button class="lnb primary" onclick="markDone('files','text')">Mark Complete & Continue →</button></div>`,
+  lab:callout('warn','Objective','Practice creating, reading, and organizing files.')+
+cb('bash',`<span class="k">mkdir -p ~/lab/backup</span>
+<span class="k">touch ~/lab/report.txt</span>
+<span class="k">echo "Linux Foundation" > ~/lab/report.txt</span>
+<span class="k">cat ~/lab/report.txt</span>
+<span class="k">cp ~/lab/report.txt ~/lab/backup/</span>
+<span class="k">ls -la ~/lab/backup</span>`)+
+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Take Assessment →</button></div>`,
+  quiz:[
+    {q:'Which command creates all intermediate directories?',opts:['mkdir dir','mkdir -r dir','mkdir -p a/b/c','touch a/b/c'],c:2,exp:'<code>mkdir -p</code> creates the full path including any missing parent directories without errors.'},
+    {q:'How do you follow a log file in real time?',opts:['cat -f file','tail -f file','watch cat file','head -f file'],c:1,exp:'<code>tail -f</code> follows the file and prints new lines as they are appended. Essential for monitoring logs.'},
+  ]
+},
+text:{
+  title:'Text Processing',bc:'Linux Essentials › Text',tag:'Core Concept',tc:'tag-core',time:'15 min',
+  prev:'files',next:'permissions',
+  theory:`<div class="prose"><h3>Filtering and Transforming Text</h3></div>`+
+cb('bash',`<span class="k">grep</span> <span class="s">"error"</span> <span class="a">app.log</span>         <span class="c"># Lines matching pattern</span>
+<span class="k">grep -i</span> <span class="s">"error"</span> <span class="a">app.log</span>     <span class="c"># Case-insensitive</span>
+<span class="k">grep -r</span> <span class="s">"TODO"</span> <span class="a">./src</span>         <span class="c"># Recursive in directory</span>
+<span class="k">grep -v</span> <span class="s">"debug"</span> <span class="a">app.log</span>     <span class="c"># Invert: exclude matches</span>
+<span class="k">grep -n</span> <span class="s">"error"</span> <span class="a">app.log</span>     <span class="c"># Show line numbers</span>
+<span class="k">grep -c</span> <span class="s">"error"</span> <span class="a">app.log</span>     <span class="c"># Count matching lines</span>
+
+<span class="k">sort</span> <span class="a">file.txt</span>               <span class="c"># Alphabetical sort</span>
+<span class="k">sort -rn</span> <span class="a">numbers.txt</span>        <span class="c"># Reverse numeric sort</span>
+<span class="k">sort | uniq -c | sort -rn</span>   <span class="c"># Frequency count</span>
+<span class="k">wc -l</span> <span class="a">file.txt</span>              <span class="c"># Count lines</span>
+<span class="k">cut -d: -f1</span> <span class="a">/etc/passwd</span>    <span class="c"># Extract column 1</span>`)+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('files')">← Previous</button><button class="lnb primary" onclick="markDone('text','permissions')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">cat /etc/passwd | cut -d: -f1</span>
+<span class="k">grep "user" /etc/passwd</span>
+<span class="k">cat /var/log/syslog | grep "kernel"</span>
+<span class="k">cat /etc/hosts | wc -l</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'Which grep flag excludes matching lines?',opts:['-i','-n','-v','-c'],c:2,exp:'<code>grep -v</code> inverts the match — useful for filtering out noise like debug lines from logs.'},
+  ]
+},
+permissions:{
+  title:'Permissions & Ownership',bc:'Linux System › Permissions',tag:'System',tc:'tag-sys',time:'25 min',
+  prev:'text',next:'processes',
+  theory:`<div class="prose"><h3>The Permission Model</h3>
+<p>Every file has permissions for three classes: <strong>owner (u)</strong>, <strong>group (g)</strong>, <strong>others (o)</strong>. Each has three bits: <strong>r=4, w=2, x=1</strong>.</p></div>`+
+cb('output',`<span class="o">-rwxr-xr-- 1 user users 4096 Jun 27 script.sh</span>
+<span class="c"> ↑ ↑↑↑ ↑↑↑ ↑↑↑
+ │ │   │   └── others: r-- = 4
+ │ │   └────── group:  r-x = 5
+ │ └────────── owner:  rwx = 7
+ └──────────── type: - file  d dir  l symlink</span>`)+
+cb('bash',`<span class="c"># Octal notation</span>
+<span class="k">chmod</span> <span class="n">755</span> <span class="a">script.sh</span>     <span class="c"># rwxr-xr-x  (standard executable)</span>
+<span class="k">chmod</span> <span class="n">644</span> <span class="a">config.txt</span>    <span class="c"># rw-r--r--  (standard file)</span>
+<span class="k">chmod</span> <span class="n">600</span> <span class="a">~/.ssh/id_rsa</span> <span class="c"># rw-------  (SSH private key)</span>
+
+<span class="c"># Symbolic notation</span>
+<span class="k">chmod +x</span> <span class="a">script.sh</span>      <span class="c"># Add execute for all</span>
+<span class="k">chmod go-w</span> <span class="a">file.txt</span>     <span class="c"># Remove write from group+others</span>
+
+<span class="c"># Ownership</span>
+<span class="k">chown</span> <span class="a">alice file.txt</span>    <span class="c"># Change owner</span>
+<span class="k">chown</span> <span class="a">alice:devs file</span>  <span class="c"># Change owner and group</span>
+<span class="k">chown -R</span> <span class="a">alice dir/</span>    <span class="c"># Recursive</span>`)+
+callout('info','Special Bits','<strong>SUID (4xxx)</strong> — runs with owner privileges (e.g. <code>passwd</code>)<br><strong>SGID (2xxx)</strong> — new files inherit group<br><strong>Sticky (1xxx)</strong> — only owner can delete (<code>/tmp</code>)')+
+`<div class="lnb-row"><button class="lnb" onclick="text'">← Previous</button><button class="lnb primary" onclick="markDone('permissions','processes')">Mark Complete & Continue →</button></div>`,
+  lab:callout('warn','Objective','Manipulate file permissions and inspect results.')+
+cb('bash',`<span class="k">touch ~/test.sh</span>
+<span class="k">ls -la ~/test.sh</span>
+<span class="k">chmod 755 ~/test.sh</span>
+<span class="k">ls -la ~/test.sh</span>
+<span class="k">chmod go-x ~/test.sh</span>
+<span class="k">ls -la ~/test.sh</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'What octal gives owner full access, group read+execute, others read only?',opts:['644','775','754','777'],c:2,exp:'7=rwx (owner), 5=r-x (group), 4=r-- (others) → 754.'},
+    {q:'Why use chmod 600 for SSH private keys?',opts:['Makes it executable','Only owner can read/write — SSH rejects world-readable keys','Hides the file','Compresses the key'],c:1,exp:'SSH enforces strict permissions. A private key readable by group or others is rejected outright (permissions are too open).'},
+  ]
+},
+processes:{
+  title:'Processes & Signals',bc:'Linux System › Processes',tag:'System',tc:'tag-sys',time:'20 min',
+  prev:'permissions',next:'pipes',
+  theory:`<div class="prose"><h3>Understanding Processes</h3>
+<p>Every running program is a <strong>process</strong> with a unique PID. Processes have a parent (PPID), run as a specific user, and consume CPU and memory.</p></div>`+
+cb('bash',`<span class="k">ps aux</span>                     <span class="c"># All processes, full detail</span>
+<span class="k">pgrep nginx</span>               <span class="c"># PIDs matching name</span>
+
+<span class="c"># Send signals</span>
+<span class="k">kill 1234</span>                   <span class="c"># SIGTERM — graceful shutdown</span>
+<span class="k">kill -9 1234</span>              <span class="c"># SIGKILL — immediate force</span>
+<span class="k">killall nginx</span>              <span class="c"># Kill all by name</span>
+
+<span class="c"># Background jobs</span>
+<span class="k">command &</span>                  <span class="c"># Start in background</span>
+<span class="k">jobs</span>                     <span class="c"># List background jobs</span>
+<span class="k">fg %1</span>                     <span class="c"># Bring job 1 to foreground</span>
+<span class="k">nohup command &</span>          <span class="c"># Survive terminal close</span>`)+
+callout('info','Common Signals','<strong>SIGTERM (15)</strong> — Graceful; process can clean up.<br><strong>SIGKILL (9)</strong> — Forced; cannot be caught or blocked.<br><strong>SIGHUP (1)</strong> — Reload config (most daemons handle this).<br><strong>SIGINT (2)</strong> — Interrupt; what Ctrl+C sends.')+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('permissions')">← Previous</button><button class="lnb primary" onclick="markDone('processes','pipes')">Mark Complete & Continue →</button></div>`,
+  lab:callout('warn','Objective','Inspect running processes.')+cb('bash',`<span class="k">ps aux</span>
+<span class="k">ps aux | grep bash</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'Difference between SIGTERM and SIGKILL?',opts:['No difference','SIGTERM is graceful (catchable); SIGKILL forces immediate termination','SIGKILL is slower','SIGTERM only works as root'],c:1,exp:'SIGTERM (15) lets the process clean up. SIGKILL (9) is enforced by the kernel — the process has no opportunity to handle it.'},
+    {q:'How do you keep a process running after logout?',opts:['command --persist','bg command','nohup command &','forever command'],c:2,exp:'<code>nohup</code> ignores SIGHUP (sent when terminal closes). Combined with <code>&</code> it runs detached in the background.'},
+  ]
+},
+pipes:{
+  title:'Pipes & Redirection',bc:'Linux System › Pipes',tag:'Core Concept',tc:'tag-core',time:'20 min',
+  prev:'processes',next:'systemd',
+  theory:`<div class="prose"><h3>Connecting Commands</h3>
+<p>The Unix philosophy: programs do one thing well and communicate through text. Pipes connect stdout of one command to stdin of the next.</p></div>`+
+cb('bash',`<span class="c"># Pipes</span>
+<span class="k">ps aux | grep nginx</span>               <span class="c"># Filter process list</span>
+<span class="k">cat /etc/passwd | cut -d: -f1</span>    <span class="c"># Extract usernames</span>
+<span class="k">ls /usr/bin | sort | uniq | wc -l</span> <span class="c"># Count unique binaries</span>
+
+<span class="c"># Output redirection</span>
+<span class="k">ls > files.txt</span>                    <span class="c"># stdout → file (overwrite)</span>
+<span class="k">ls >> files.txt</span>                   <span class="c"># stdout → file (append)</span>
+<span class="k">cmd 2> errors.log</span>                 <span class="c"># stderr → file</span>
+<span class="k">cmd > out.txt 2>&1</span>               <span class="c"># stdout + stderr → file</span>
+<span class="k">cmd > /dev/null 2>&1</span>              <span class="c"># Silence all output</span>`)+
+callout('info','2>&1 Explained','FD 1 = stdout, FD 2 = stderr. <code>2>&1</code> redirects stderr to wherever stdout currently points. Order matters — put it after the stdout redirect.')+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('processes')">← Previous</button><button class="lnb primary" onclick="markDone('pipes','systemd')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">ls /etc | grep "host"</span>
+<span class="k">cat /etc/hosts | wc -l</span>
+<span class="k">echo "test" > /tmp/test.txt && cat /tmp/test.txt</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'What does <code>cmd > /dev/null 2>&1</code> do?',opts:['Saves output to /dev/null file','Suppresses all output (stdout and stderr)','Only hides errors','Duplicates output'],c:1,exp:'<code>/dev/null</code> discards everything written to it. Redirecting both streams there silences the command completely.'},
+    {q:'What does >> do differently from >?',opts:['Faster write','Appends to file instead of overwriting','Creates a backup','No difference'],c:1,exp:'<code>></code> truncates before writing. <code>>></code> appends to the end, preserving existing content.'},
+  ]
+},
+systemd:{
+  title:'systemd & Services',bc:'Linux System › systemd',tag:'System',tc:'tag-sys',time:'20 min',
+  prev:'pipes',next:'networking',
+  theory:`<div class="prose"><h3>Managing Services</h3></div>`+
+cb('bash',`<span class="k">systemctl status nginx</span>          <span class="c"># Service status</span>
+<span class="k">systemctl start nginx</span>           <span class="c"># Start</span>
+<span class="k">systemctl stop nginx</span>            <span class="c"># Stop</span>
+<span class="k">systemctl restart nginx</span>          <span class="c"># Restart</span>
+<span class="k">systemctl reload nginx</span>           <span class="c"># Reload config (no downtime)</span>
+<span class="k">systemctl enable nginx</span>           <span class="c"># Auto-start at boot</span>
+<span class="k">systemctl disable nginx</span>          <span class="c"># Remove from boot</span>
+<span class="k">systemctl list-units --type=service</span>
+
+<span class="c"># Logs via journald</span>
+<span class="k">journalctl -u nginx</span>              <span class="c"># All logs for service</span>
+<span class="k">journalctl -u nginx -f</span>           <span class="c"># Follow live</span>
+<span class="k">journalctl --since "1 hour ago"</span>
+<span class="k">journalctl -p err</span>                <span class="c"># Errors only</span>`)+
+`<div class="prose"><h3>Unit File Structure</h3></div>`+
+cb('ini',`<span class="c"># /etc/systemd/system/myapp.service</span>
+[<span class="kw">Unit</span>]
+<span class="a">Description</span>=My Application
+<span class="a">After</span>=network.target
+
+[<span class="kw">Service</span>]
+<span class="a">User</span>=myapp
+<span class="a">ExecStart</span>=<span class="s">/opt/myapp/bin/server</span>
+<span class="a">Restart</span>=on-failure
+
+[<span class="kw">Install</span>]
+<span class="a">WantedBy</span>=multi-user.target`)+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('pipes')">← Previous</button><button class="lnb primary" onclick="markDone('systemd','networking')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">cat /etc/systemd/system/myapp.service</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'How do you make a service start automatically at boot?',opts:['systemctl autostart','systemctl enable svc','systemctl boot svc','Edit /etc/rc.local'],c:1,exp:'<code>systemctl enable</code> creates symlinks in the systemd target directory, causing the service to start at boot.'},
+  ]
+},
+networking:{
+  title:'Network Fundamentals',bc:'Networking › Fundamentals',tag:'Networking',tc:'tag-net',time:'25 min',
+  prev:'systemd',next:'ssh',
+  theory:`<div class="prose"><h3>Diagnostics Toolkit</h3></div>`+
+cb('bash',`<span class="c"># Interfaces</span>
+<span class="k">ip addr show</span>              <span class="c"># All interfaces and IPs</span>
+<span class="k">ip route show</span>             <span class="c"># Routing table</span>
+
+<span class="c"># Connectivity</span>
+<span class="k">ping -c 4 8.8.8.8</span>        <span class="c"># 4 ICMP packets</span>
+<span class="k">traceroute google.com</span>     <span class="c"># Hop-by-hop path</span>
+
+<span class="c"># DNS</span>
+<span class="k">dig +short google.com</span>     <span class="c"># Quick DNS lookup</span>
+<span class="k">cat /etc/resolv.conf</span>      <span class="c"># Configured DNS servers</span>
+
+<span class="c"># Ports & Connections</span>
+<span class="k">ss -tulpn</span>                  <span class="c"># Listening TCP/UDP ports</span>
+<span class="k">ss -tnp</span>                    <span class="c"># Established connections</span>
+<span class="k">curl -I https://example.com</span> <span class="c"># HTTP headers</span>`)+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('systemd')">← Previous</button><button class="lnb primary" onclick="markDone('networking','ssh')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">cat /etc/hosts</span>
+<span class="k">cat /etc/resolv.conf</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'Which command shows listening ports with owning processes?',opts:['netstat -a','ss -tulpn','ip ports','lsof -ports'],c:1,exp:'<code>ss -tulpn</code> shows TCP/UDP listening ports and the process holding each socket. It replaces the older <code>netstat</code>.'},
+  ]
+},
+ssh:{
+  title:'SSH & Remote Access',bc:'Networking › SSH',tag:'Networking',tc:'tag-net',time:'20 min',
+  prev:'networking',next:'bash',
+  theory:`<div class="prose"><h3>Key-Based Authentication</h3>
+<p>SSH keys use asymmetric cryptography. The private key never leaves your machine — servers authenticate you using only the public key.</p></div>`+
+cb('bash',`<span class="c"># Generate key pair</span>
+<span class="k">ssh-keygen -t ed25519 -C</span> <span class="s">"user@host"</span>
+<span class="c"># → ~/.ssh/id_ed25519  (private — never share)</span>
+<span class="c"># → ~/.ssh/id_ed25519.pub  (public — safe to distribute)</span>
+
+<span class="c"># Deploy to server</span>
+<span class="k">ssh-copy-id user@server.com</span>
+<span class="c"># Appends to server ~/.ssh/authorized_keys</span>
+
+<span class="c"># Connect</span>
+<span class="k">ssh user@server.com</span>
+<span class="k">ssh -p 2222 user@server.com</span>    <span class="c"># Custom port</span>
+
+<span class="c"># File transfer</span>
+<span class="k">scp file.txt user@server:~/</span>
+<span class="k">rsync -avz src/ user@server:dst/</span>  <span class="c"># Efficient sync</span>
+
+<span class="c"># Port forwarding</span>
+<span class="k">ssh -L 8080:localhost:80 user@srv</span>  <span class="c"># Local forward</span>`)+
+callout('danger','Permissions','<code>chmod 700 ~/.ssh</code> and <code>chmod 600 ~/.ssh/id_*</code>. SSH refuses keys with loose permissions.')+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('networking')">← Previous</button><button class="lnb primary" onclick="markDone('ssh','bash')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">cat /etc/ssh/sshd_config</span>
+<span class="k">ls -la ~/.ssh</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'Why are SSH keys preferred over passwords?',opts:['Easier to remember','Cryptographically strong; immune to remote brute-force','SSH keys type faster','Passwords do not work with SSH'],c:1,exp:'The private key never leaves your machine. Even if someone intercepts the public key, they cannot derive the private key.'},
+  ]
+},
+bash:{
+  title:'Bash Scripting',bc:'Scripting › Bash',tag:'Scripting',tc:'tag-script',time:'35 min',
+  prev:'ssh',next:'regex',
+  theory:`<div class="prose"><h3>Script Structure and Patterns</h3></div>`+
+cb('bash',`<span class="s">#!/bin/bash</span>              <span class="c"># Shebang — specifies interpreter</span>
+<span class="k">set -euo pipefail</span>        <span class="c"># Exit on error, unbound var, pipe fail</span>
+
+<span class="c"># Variables</span>
+<span class="kw">NAME</span>=<span class="s">"Linux"</span>
+<span class="kw">TODAY</span>=$(<span class="k">date +%Y-%m-%d</span>)  <span class="c"># Command substitution</span>
+
+<span class="c"># Conditionals</span>
+<span class="kw">if</span> [ -f <span class="s">"/etc/hosts"</span> ]; <span class="kw">then</span>
+    <span class="k">echo</span> <span class="s">"file exists"</span>
+<span class="kw">elif</span> [ -d <span class="s">"/etc"</span> ]; <span class="kw">then</span>
+    <span class="k">echo</span> <span class="s">"directory"</span>
+<span class="kw">fi</span>
+
+<span class="c"># Loops</span>
+<span class="kw">for</span> f <span class="kw">in</span> /etc/*.conf; <span class="kw">do</span>
+    <span class="k">echo</span> <span class="s">"Found: $f"</span>
+<span class="kw">done</span>
+
+<span class="c"># Functions</span>
+log() { <span class="k">echo</span> <span class="s">"[$(date +%T)] $*"</span>; }
+log <span class="s">"Script started"</span>`)+
+callout('info','Test Operators','<code>-f</code> file exists &nbsp; <code>-d</code> directory exists &nbsp; <code>-z "$v"</code> empty string &nbsp; <code>-n "$v"</code> non-empty &nbsp; <code>-eq -lt -gt</code> numeric comparison')+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('ssh')">← Previous</button><button class="lnb primary" onclick="markDone('bash','regex')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">cat ~/projects/hello.sh</span>
+<span class="k">bash ~/projects/hello.sh</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'What does <code>set -e</code> do?',opts:['Sets environment variables','Exits immediately if any command fails','Enables echo mode','Sets encoding'],c:1,exp:'<code>set -e</code> causes the script to exit on the first non-zero return code. Combined with <code>-u</code> and <code>pipefail</code>, it makes scripts robust.'},
+    {q:'How do you capture command output into a variable?',opts:['VAR=command','VAR=$(command)','VAR=`command`','B and C are both correct'],c:3,exp:'Both <code>$(command)</code> and backtick syntax work. <code>$()</code> is preferred — it nests cleanly and is easier to read.'},
+  ]
+},
+regex:{
+  title:'grep, awk & sed',bc:'Scripting › Text Tools',tag:'Scripting',tc:'tag-script',time:'30 min',
+  prev:'bash',next:'storage',
+  theory:`<div class="prose"><h3>Stream Editors and Field Processors</h3></div>`+
+cb('bash',`<span class="k">sed</span> <span class="s">'s/old/new/g'</span> <span class="a">file</span>     <span class="c"># Replace all occurrences</span>
+<span class="k">sed</span> <span class="s">'/^#/d'</span> <span class="a">file</span>           <span class="c"># Delete comment lines</span>
+<span class="k">sed -i</span> <span class="s">'s/foo/bar/g'</span> <span class="a">file</span> <span class="c"># In-place edit</span>
+<span class="k">sed -n</span> <span class="s">'10,20p'</span> <span class="a">file</span>       <span class="c"># Print lines 10–20</span>
+
+<span class="c"># awk — column processor</span>
+<span class="k">awk</span> <span class="s">'{print $1}'</span> <span class="a">file</span>      <span class="c"># First field</span>
+<span class="k">awk -F:</span> <span class="s">'{print $1,$3}'</span> <span class="a">/etc/passwd</span>
+<span class="k">awk</span> <span class="s">'$3 > 1000'</span> <span class="a">/etc/passwd</span>  <span class="c"># Filter rows</span>
+<span class="k">awk</span> <span class="s">'{sum+=$1} END{print sum}'</span> <span class="a">nums</span>  <span class="c"># Sum column</span>
+
+<span class="c"># Extended regex</span>
+<span class="k">grep -E</span> <span class="s">'^[0-9]{1,3}\.'</span> <span class="a">file</span>
+<span class="k">grep -P</span> <span class="s">'\d{4}-\d{2}-\d{2}'</span> <span class="a">file</span>`)+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('bash')">← Previous</button><button class="lnb primary" onclick="markDone('regex','storage')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">awk -F: '{print $1, $3}' /etc/passwd</span>
+<span class="k">echo "hello world" | sed 's/world/Linux/'</span>
+<span class="k">grep -n "user" /etc/passwd</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'What does <code>sed -i \'s/foo/bar/g\' file</code> do?',opts:['Prints replacements','Edits file in-place, replacing all foo with bar','Creates a backup','Replaces only first occurrence'],c:1,exp:'<code>sed -i</code> modifies the file directly. The <code>g</code> flag applies the substitution globally on each line.'},
+  ]
+},
+storage:{
+  title:'Disk & Storage',bc:'Advanced › Storage',tag:'Advanced',tc:'tag-adv',time:'25 min',
+  prev:'regex',next:'security',
+  theory:`<div class="prose"><h3>Disk Management</h3></div>`+
+cb('bash',`<span class="k">df -h</span>                      <span class="c"># Filesystem usage</span>
+<span class="k">du -sh /var/log</span>            <span class="c"># Directory size</span>
+<span class="k">du -sh * | sort -rh</span>       <span class="c"># Sorted by size</span>
+<span class="k">lsblk</span>                      <span class="c"># Block devices tree</span>
+<span class="k">cat /etc/fstab</span>             <span class="c"># Boot-time mounts</span>
+
+<span class="c"># Find large files</span>
+<span class="k">find / -size +100M -type f 2>/dev/null</span>
+<span class="k">find /var/log -name "*.log" -mtime +30</span>  <span class="c"># Old logs</span>`)+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('regex')">← Previous</button><button class="lnb primary" onclick="markDone('storage','security')">Mark Complete & Continue →</button></div>`,
+  lab:cb('bash',`<span class="k">cat /etc/fstab</span>
+<span class="k">find /var -name "*.log"</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'Which command shows filesystem disk usage in human-readable form?',opts:['ls -h','du /','df -h','mount -l'],c:2,exp:'<code>df -h</code> shows used/available space for all mounted filesystems in GB/MB units.'},
+  ]
+},
+security:{
+  title:'Security Hardening',bc:'Advanced › Security',tag:'Security',tc:'tag-sec',time:'30 min',
+  prev:'storage',next:null,
+  theory:`<div class="prose"><h3>Linux Security Fundamentals</h3></div>`+
+cb('bash',`<span class="c"># User & privileges</span>
+<span class="k">sudo -l</span>                    <span class="c"># What can this user sudo?</span>
+<span class="k">id</span>                         <span class="c"># UID, GID, groups</span>
+<span class="k">last</span>                       <span class="c"># Login history</span>
+
+<span class="c"># Open ports</span>
+<span class="k">ss -tulpn</span>
+
+<span class="c"># SUID files (attack surface)</span>
+<span class="k">find / -perm -4000 -type f 2>/dev/null</span>
+
+<span class="c"># Auth logs</span>
+<span class="k">grep "Failed password" /var/log/auth.log</span>
+<span class="k">journalctl -p err --since "24h ago"</span>
+
+<span class="c"># /etc/ssh/sshd_config hardening</span>
+<span class="k">cat /etc/ssh/sshd_config | grep -E "^(PermitRoot|PasswordAuth|PubkeyAuth)"</span>`)+
+callout('danger','Principle of Least Privilege','Every user and process should have only the minimum permissions required. Never run applications as root unless absolutely necessary.')+
+`<div class="lnb-row"><button class="lnb" onclick="loadLesson('storage')">← Previous</button><button class="lnb primary" onclick="markDone('security',null)">✓ Complete Course</button></div>`,
+  lab:cb('bash',`<span class="k">cat /etc/ssh/sshd_config</span>
+<span class="k">cat /var/log/auth.log</span>
+<span class="k">find /etc -name "*.conf" | head -10</span>`)+`<div class="lnb-row"><button class="lnb" onclick="switchLT('theory',null)">← Theory</button><button class="lnb primary" onclick="switchLT('quiz',null)">Assessment →</button></div>`,
+  quiz:[
+    {q:'What is the principle of least privilege?',opts:['Always use root for reliability','Processes get only minimum permissions needed','All files should be world-readable','Security through obscurity'],c:1,exp:'Least privilege minimizes the blast radius of a breach. A compromised low-privilege process can do far less damage than a root process.'},
+  ]
+},
+};
+
+// ── LESSON LOADER ─────────────────────────────────────────────
+function loadLesson(id){
+  if(!LESSONS[id])return;
+  S.lesson=id;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const nav=document.getElementById('nav-'+id);
+  if(nav)nav.classList.add('active');
+  const L=LESSONS[id];
+  document.getElementById('lBC').textContent=L.bc;
+  document.getElementById('lTitle').textContent=L.title;
+  const tag=document.getElementById('lTag');
+  tag.textContent=L.tag; tag.className='ltag '+L.tc;
+  document.getElementById('lTime').textContent='⏱ '+L.time;
+  document.getElementById('lc-theory').innerHTML=L.theory;
+  document.getElementById('lc-lab').innerHTML=L.lab;
+  document.getElementById('lc-quiz').innerHTML=buildQuizHTML(id,L.quiz||[]);
+  switchLT('theory',null);
+  document.querySelector('.lesson-body').scrollTop=0;
+}
+
+function buildQuizHTML(lid,qs){
+  if(!qs.length)return'<div class="prose"><p>No quiz for this lesson yet.</p></div>';
+  return qs.map((q,i)=>`
+<div class="quiz-q" id="qq-${lid}-${i}">
+  <div class="quiz-qnum">Question ${i+1} of ${qs.length}</div>
+  <div class="quiz-qtext">${q.q}</div>
+  <div class="quiz-opts">
+    ${q.opts.map((o,oi)=>`<button class="quiz-opt" onclick="ansQ('${lid}',${i},${oi},${q.c},\`${q.exp.replace(/`/g,"'")}\`)">${o}</button>`).join('')}
+  </div>
+  <div class="quiz-fb" id="qfb-${lid}-${i}"></div>
+</div>`).join('')+
+`<div class="lnb-row" style="margin-top:8px">
+  <button class="lnb" onclick="switchLT('lab',null)">← Lab</button>
+</div>`;
+}
+
+function ansQ(lid,qi,chosen,correct,exp){
+  const btns=document.querySelectorAll(`#qq-${lid}-${qi} .quiz-opt`);
+  btns.forEach(b=>b.disabled=true);
+  btns[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if(chosen!==correct)btns[correct].classList.add('correct');
+  const fb=document.getElementById(`qfb-${lid}-${qi}`);
+  fb.className=`quiz-fb show ${chosen===correct?'ok':'fail'}`;
+  fb.innerHTML=(chosen===correct?'✓ Correct. ':'✗ Incorrect. ')+exp;
+}
+
+function markDone(id,nextId){
+  S.done.add(id);
+  const chk=document.getElementById('chk-'+id);
+  if(chk){chk.classList.add('done');chk.textContent='✓';}
+  const pct=Math.round(S.done.size/S.total*100);
+  document.getElementById('topProg').style.width=pct+'%';
+  document.getElementById('topPct').textContent=pct+'%';
+  if(nextId)loadLesson(nextId);
+}
+
+function switchLT(name,el){
+  document.querySelectorAll('.l-tab').forEach((t,i)=>{
+    const ns=['theory','lab','quiz'];
+    t.classList.toggle('active',ns[i]===name);
+  });
+  document.querySelectorAll('.lc').forEach(lc=>{
+    lc.classList.toggle('active',lc.id==='lc-'+name);
+  });
+  if(el)return;
+  document.querySelectorAll('.l-tab').forEach((t,i)=>{
+    if(['theory','lab','quiz'][i]===name)t.classList.add('active');
+    else t.classList.remove('active');
+  });
+}
+
+function copyCode(btn){
+  const pre=btn.closest('.cb').querySelector('pre');
+  const text=pre.innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',1500);
+  });
+}
+
+// ── VIRTUAL FILESYSTEM ─────────────────────────────────────────
+const FS={
+  '/':{type:'dir',children:['home','etc','var','usr','bin','tmp','dev','proc','sys','opt']},
+  '/home':{type:'dir',children:['user']},
+  '/home/user':{type:'dir',children:['projects','notes.txt','.bashrc','.ssh','lab']},
+  '/home/user/.ssh':{type:'dir',children:['authorized_keys','config']},
+  '/home/user/.ssh/authorized_keys':{type:'file',content:'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK... user@hostname\n'},
+  '/home/user/.ssh/config':{type:'file',content:'Host lf-server\n  HostName 192.168.1.100\n  User user\n  IdentityFile ~/.ssh/id_ed25519\n'},
+  '/home/user/projects':{type:'dir',children:['hello.sh','deploy.sh']},
+  '/home/user/projects/hello.sh':{type:'file',content:'#!/bin/bash\nset -euo pipefail\nNAME="${1:-World}"\necho "Hello, $NAME!"\ndate\n'},
+  '/home/user/projects/deploy.sh':{type:'file',content:'#!/bin/bash\nset -e\necho "[$(date)] Starting deploy..."\nsystemctl restart myapp\necho "[$(date)] Done."\n'},
+  '/home/user/notes.txt':{type:'file',content:'Linux Learning Notes\n====================\npwd, ls, cd, cat, grep\nchmod, chown, ps, kill\nssh, scp, rsync\n'},
+  '/home/user/.bashrc':{type:'file',content:'# ~/.bashrc\nexport PATH="$HOME/bin:$PATH"\nalias ll="ls -la"\nalias la="ls -la"\nalias ..="cd .."\n'},
+  '/home/user/lab':{type:'dir',children:[]},
+  '/etc':{type:'dir',children:['hosts','passwd','fstab','resolv.conf','ssh','systemd']},
+  '/etc/hosts':{type:'file',content:'127.0.0.1\tlocalhost\n127.0.1.1\tlinux-foundation\n192.168.1.10\tdev-server\n192.168.1.20\tprod-server\n'},
+  '/etc/passwd':{type:'file',content:'root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nuser:x:1000:1000:Linux User:/home/user:/bin/bash\ngit:x:1001:1001:Git:/home/git:/usr/bin/git-shell\n'},
+  '/etc/fstab':{type:'file',content:'# /etc/fstab\nUUID=a1b2c3...  /        ext4  errors=remount-ro 0 1\nUUID=e5f6a7...  /boot   vfat  umask=0077        0 1\ntmpfs           /tmp    tmpfs defaults,nosuid   0 0\n'},
+  '/etc/resolv.conf':{type:'file',content:'# Generated by systemd-resolved\nnameserver 8.8.8.8\nnameserver 8.8.4.4\nsearch localdomain\n'},
+  '/etc/ssh':{type:'dir',children:['sshd_config']},
+  '/etc/ssh/sshd_config':{type:'file',content:'Port 22\nPermitRootLogin no\nPasswordAuthentication no\nPubkeyAuthentication yes\nAuthorizedKeysFile .ssh/authorized_keys\nX11Forwarding no\n'},
+  '/etc/systemd':{type:'dir',children:['system']},
+  '/etc/systemd/system':{type:'dir',children:['myapp.service']},
+  '/etc/systemd/system/myapp.service':{type:'file',content:'[Unit]\nDescription=My Application\nAfter=network.target\n\n[Service]\nType=simple\nUser=user\nWorkingDirectory=/opt/myapp\nExecStart=/opt/myapp/bin/server\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=multi-user.target\n'},
+  '/var':{type:'dir',children:['log']},
+  '/var/log':{type:'dir',children:['syslog','auth.log']},
+  '/var/log/syslog':{type:'file',content:'Jun 27 00:00:01 lf kernel: Linux version 6.1.0\nJun 27 00:00:02 lf systemd[1]: Started systemd-journald.\nJun 27 00:00:03 lf kernel: Booting Linux on physical CPU\nJun 27 00:01:00 lf sshd[1234]: Server listening on 0.0.0.0 port 22.\n'},
+  '/var/log/auth.log':{type:'file',content:'Jun 27 10:00:01 lf sshd[2000]: Accepted publickey for user from 10.0.0.1\nJun 27 10:01:00 lf sudo: user : TTY=pts/0 ; COMMAND=/bin/ls\n'},
+  '/usr':{type:'dir',children:['bin','local']},
+  '/usr/bin':{type:'dir',children:[]},
+  '/usr/local':{type:'dir',children:['bin']},
+  '/usr/local/bin':{type:'dir',children:[]},
+  '/bin':{type:'dir',children:[]},
+  '/tmp':{type:'dir',children:[]},
+  '/dev':{type:'dir',children:['null','zero','sda','sda1']},
+  '/dev/null':{type:'file',content:''},
+  '/dev/zero':{type:'file',content:''},
+  '/dev/sda':{type:'file',content:'[block device]'},
+  '/dev/sda1':{type:'file',content:'[block device partition 1]'},
+  '/proc':{type:'dir',children:['cpuinfo','meminfo','version','uptime']},
+  '/proc/cpuinfo':{type:'file',content:'processor\t: 0\nvendor_id\t: GenuineIntel\nmodel name\t: Intel(R) Core(TM) i7-12700K @ 3.60GHz\ncache size\t: 25600 KB\n'},
+  '/proc/meminfo':{type:'file',content:'MemTotal:\t16384000 kB\nMemFree:\t 8192000 kB\nMemAvailable:\t10240000 kB\n'},
+  '/proc/version':{type:'file',content:'Linux version 6.1.0-linux-foundation (gcc version 12.2.0) #1 SMP PREEMPT\n'},
+  '/proc/uptime':{type:'file',content:'86400.12 340123.45\n'},
+  '/sys':{type:'dir',children:[]},
+  '/opt':{type:'dir',children:['myapp']},
+  '/opt/myapp':{type:'dir',children:['bin']},
+  '/opt/myapp/bin':{type:'dir',children:['server']},
+  '/opt/myapp/bin/server':{type:'file',content:'#!/bin/bash\necho "Server listening on :8080"\n'},
+};
+
+// ── TERMINAL ───────────────────────────────────────────────────
+function tp(cls,text){
+  const out=document.getElementById('termOut');
+  const d=document.createElement('div');
+  d.className='tl '+cls; d.textContent=text;
+  out.appendChild(d); out.scrollTop=out.scrollHeight;
+}
+function tpHTML(html){
+  const out=document.getElementById('termOut');
+  const d=document.createElement('div');
+  d.className='tl'; d.innerHTML=html;
+  out.appendChild(d); out.scrollTop=out.scrollHeight;
+}
+function tprompt(cmd){
+  const p=cwdD();
+  tpHTML(`<span class="tp-u">user</span><span class="tp-a">@</span><span class="tp-h">lf</span>:<span class="tp-p">${p}</span><span class="tp-s">$ </span><span class="t-cmd">${esc(cmd)}</span>`);
+}
+function cwdD(){return S.cwd.replace('/home/user','~');}
+function updPath(){document.getElementById('tPath').textContent=cwdD();}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function rp(p){
+  if(!p||p==='~')return'/home/user';
+  if(p.startsWith('~/'))return'/home/user/'+p.slice(2);
+  if(p.startsWith('/'))return norm(p);
+  return norm(S.cwd+'/'+p);
+}
+function norm(p){
+  const parts=p.split('/').filter(Boolean),r=[];
+  for(const x of parts){if(x==='..')r.pop();else if(x!=='.')r.push(x);}
+  return'/'+r.join('/');
+}
+function clearTerm(){document.getElementById('termOut').innerHTML='';}
+function termHelp(){
+  tp('t-dim','──────────────────────────────────────────────');
+  tp('t-b','Available commands:');
+  ['ls [-la] [path]   cd [path]        pwd','cat [file]         mkdir [-p] dir   touch [file]',
+    'rm [-r] [path]    cp src dst       mv src dst','echo text           grep pat file    find dir -name',
+    'wc -l file        cut -d: -f1 f    head/tail [-n] f','awk / sed          sort / uniq      ps aux',
+    'whoami / id        uname -a          date / history   clear'].forEach(l=>tp('t-out','  '+l));
+  tp('t-dim','──────────────────────────────────────────────');
+}
+function initTerm(){
+  tp('t-g','Linux Foundation Interactive Shell  (bash 5.2)');
+  tp('t-dim','Type \'help\' or click the help button. Tab to autocomplete.');
+  tp('','');
+}
+
+function htk(e){
+  if(e.key==='Enter'){const v=e.target.value.trim();e.target.value='';if(v){S.th.unshift(v);S.hi=-1;runCmd(v);}}
+  else if(e.key==='ArrowUp'){e.preventDefault();if(S.hi<S.th.length-1)e.target.value=S.th[++S.hi];}
+  else if(e.key==='ArrowDown'){e.preventDefault();S.hi>0?e.target.value=S.th[--S.hi]:(S.hi=-1,e.target.value='');}
+  else if(e.key==='Tab'){e.preventDefault();tabComp(e.target);}
+  else if(e.key==='l'&&e.ctrlKey){e.preventDefault();clearTerm();}
+}
+
+function tabComp(inp){
+  const v=inp.value,parts=v.split(' '),last=parts[parts.length-1];
+  if(!last)return;
+  const dp=last.includes('/')?rp(last.slice(0,last.lastIndexOf('/')+1)):S.cwd;
+  const pref=last.includes('/')?last.slice(last.lastIndexOf('/')+1):last;
+  const node=FS[dp];if(!node||node.type!=='dir')return;
+  const m=node.children.filter(c=>c.startsWith(pref));
+  if(m.length===1){
+    parts[parts.length-1]=(last.includes('/')?last.slice(0,last.lastIndexOf('/')+1):'')+m[0];
+    const fp=norm(dp+'/'+m[0]);if(FS[fp]?.type==='dir')parts[parts.length-1]+='/';
+    inp.value=parts.join(' ');
+  }else if(m.length>1){tprompt(v);tp('t-dim',m.join('  '));}
+}
+
+function getSim(cmd,args){
+  const raw=args.join(' ');
+  const sims={
+    chmod:'permissions updated',chown:'ownership updated',
+    sudo:`[sudo] password for user:\nCommand executed.`,
+    apt:`Reading package lists... Done\nBuilding dependency tree... Done\n0 upgraded, 0 newly installed`,
+    systemctl:`● nginx.service - A high performance web server\n   Loaded: loaded (/lib/systemd/system/nginx.service)\n   Active: active (running) since Jun 27 10:00:00 UTC; 2h ago\n Main PID: 1337 (nginx)`,
+    journalctl:`Jun 27 10:00:00 lf systemd[1]: Started nginx.\nJun 27 10:00:01 lf nginx[1337]: Server ready on port 80.`,
+    ssh:`Welcome to Linux Foundation Server\nLast login: Thu Jun 27 09:00:00 2024`,
+    'ssh-keygen':`Generating public/private ed25519 key pair.\nYour identification: ~/.ssh/id_ed25519\nYour public key: ~/.ssh/id_ed25519.pub\nThe key fingerprint is: SHA256:abc123... user@host`,
+    'ssh-copy-id':`/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed.\nuser@server's password:\nNumber of key(s) added: 1`,
+    ping:`PING 8.8.8.8 56(84) bytes of data.\n64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=12.3 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=11.8 ms\n--- 8.8.8.8 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss`,
+    ip:`2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500\n    link/ether 52:54:00:ab:cd:ef brd ff:ff:ff:ff:ff:ff\n    inet 192.168.1.100/24 brd 192.168.1.255 scope global eth0`,
+    ss:`Netid  State    Recv-Q  Send-Q  Local Address:Port  Peer Address:Port\ntcp    LISTEN  0       128     0.0.0.0:22         0.0.0.0:*\ntcp    LISTEN  0       511     0.0.0.0:80         0.0.0.0:*`,
+    df:`Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        50G   12G   36G  25% /\ntmpfs           7.8G     0  7.8G   0% /tmp\n/dev/sda2       100G   45G   55G  45% /data`,
+    du:`1.2M\t/var/log\n4.5G\t/usr\n892M\t/home\n12G\t/`,
+    lsblk:`NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT\nsda      8:0    0   50G  0 disk\n├─sda1   8:1    0   49G  0 part /\n└─sda2   8:2    0    1G  0 part [SWAP]`,
+    top:`top - 10:00:00 up 1 day,  0:30,  1 user,  load average: 0.12, 0.08, 0.05\nTasks: 89 total,   1 running,  88 sleeping\n%Cpu(s):  0.3 us,  0.1 sy,  0.0 ni, 99.6 id\nPID   USER  %CPU %MEM  COMMAND\n    1   root   0.0  0.1   systemd\n456   user   0.1  0.2   bash`,
+    kill:'',killall:'',pkill:'',
+    ufw:`Status: active\nTo                    Action  From\n--                    ------  ----\n22/tcp                ALLOW   Anywhere\n80/tcp                ALLOW   Anywhere\n443/tcp               ALLOW   Anywhere`,
+    last:`user     pts/0  10.0.0.1    Thu Jun 27 10:00 - 10:30  (00:30)\nwtmp begins Mon Jun 24 00:00:00 2024`,
+    who:`user     pts/0        Jun 27 10:00 (10.0.0.1)`,
+    netstat:`Active Internet connections\nProto Recv-Q Send-Q Local Address    Foreign Address  State\ntcp        0      0 0.0.0.0:22       0.0.0.0:* LISTEN\ntcp        0      0 0.0.0.0:80       0.0.0.0:* LISTEN`,
+    dig:`; <<>> DiG 9.18 <<>> +short google.com\n142.250.185.78`,
+    curl:`HTTP/2 200\ncontent-type: text/html; charset=UTF-8\nserver: gws\n[200 OK]`,
+  };
+  return sims[cmd]||`(simulated: ${raw})`;
+}
+
+async function runCmd(raw){
+  tprompt(raw);
+  if(raw.includes('&&')){
+    for(const c of raw.split('&&').map(x=>x.trim()))await runCmd(c);
+    return;
+  }
+  const args=raw.trim().split(/\s+/),cmd=args[0];
+  let out=null,err=null;
+
+  switch(cmd){
+    case 'help':termHelp();break;
+    case 'pwd':out=S.cwd;break;
+    case 'whoami':out='user';break;
+    case 'id':out='uid=1000(user) gid=1000(user) groups=1000(user),27(sudo),998(docker)';break;
+    case 'date':out=new Date().toString();break;
+    case 'uname':out=args.includes('-a')?'Linux linux-foundation 6.1.0 #1 SMP x86_64 GNU/Linux':'Linux';break;
+    case 'history':out=S.th.slice(0,20).reverse().map((c,i)=>`  ${String(i+1).padStart(3)} ${c}`).join('\n');break;
+    case 'clear':clearTerm();break;
+    case 'groups':out='user sudo docker';break;
+    case 'env':out='HOME=/home/user\nUSER=user\nPATH=/usr/local/bin:/usr/bin:/bin\nSHELL=/bin/bash\nTERM=xterm-256color';break;
+    case 'ls':{
+      let path=S.cwd,hidden=false,longf=false;
+      for(const a of args.slice(1)){
+        if(a.startsWith('-')){if(a.includes('a'))hidden=true;if(a.includes('l'))longf=true;}
+        else path=rp(a);
+      }
+      const n=FS[path];
+      if(!n){err=`ls: cannot access '${args.slice(1).find(a=>!a.startsWith('-'))||''}': No such file or directory`;break;}
+      if(n.type==='file'){out=path.split('/').pop();break;}
+      let ch=[...n.children];
+      if(!hidden)ch=ch.filter(c=>!c.startsWith('.'));
+      ch.sort();
+      if(longf){
+        const lines=['total '+(ch.length*4)];
+        ch.forEach(c=>{const fp=norm(path+'/'+c);const cn=FS[fp];const isd=cn?.type==='dir';lines.push(`${isd?'drwxr-xr-x':'-rw-r--r--'}  1 user user  ${String(cn?.content?.length||4096).padStart(6)} Jun 27 ${c}${isd?'/':''}`);});
+        out=lines.join('\n');
+      }else{out=ch.map(c=>{const fp=norm(path+'/'+c);return FS[fp]?.type==='dir'?c+'/':c;}).join('   ');}
+      break;
+    }
+    case 'cd':{
+      const t=args[1]||'/home/user';
+      const np=rp(t);
+      if(!FS[np]){err=`bash: cd: ${t}: No such file or directory`;break;}
+      if(FS[np].type!=='dir'){err=`bash: cd: ${t}: Not a directory`;break;}
+      S.cwd=np;updPath();break;
+    }
+    case 'cat':{
+      if(args.length<2){err='cat: missing operand';break;}
+      const parts2=args.slice(1).filter(a=>!a.startsWith('>'));
+      for(const a of parts2){
+        const fp=rp(a);const n=FS[fp];
+        if(!n){tp('t-r',`cat: ${a}: No such file or directory`);continue;}
+        if(n.type==='dir'){tp('t-r',`cat: ${a}: Is a directory`);continue;}
+        if(out===null)out='';out+=n.content;
+      }
+      break;
+    }
+    case 'mkdir':{
+      const name=args[args.length-1];
+      const fp=rp(name);
+      if(FS[fp]){err=`mkdir: cannot create directory '${name}': File exists`;break;}
+      const par=fp.slice(0,fp.lastIndexOf('/'))||'/';
+      if(!FS[par]||FS[par].type!=='dir'){err=`mkdir: cannot create directory '${name}': No such file or directory`;break;}
+      FS[fp]={type:'dir',children:[]};FS[par].children.push(fp.split('/').pop());
+      break;
+    }
+    case 'touch':{
+      if(args.length<2){err='touch: missing file operand';break;}
+      for(const a of args.slice(1)){
+        const fp=rp(a);
+        if(!FS[fp]){const par=fp.slice(0,fp.lastIndexOf('/'))||'/';if(FS[par]){FS[fp]={type:'file',content:''};FS[par].children.push(fp.split('/').pop());}}
+      }
+      break;
+    }
+    case 'echo':{
+      const redir=raw.indexOf('>');
+      let text=args.slice(1).join(' ').replace(/^["']|["']$/g,'');
+      if(redir>0){
+        const app=raw[redir+1]==='>';
+        const fp=rp(raw.slice(redir+(app?2:1)).trim());
+        const content=args.slice(1).join(' ').replace(/>+.*/,'').trim().replace(/^["']|["']$/g,'');
+        if(app&&FS[fp])FS[fp].content+=content+'\n';
+        else{const par=fp.slice(0,fp.lastIndexOf('/'))||'/';FS[fp]={type:'file',content:content+'\n'};if(FS[par]&&!FS[par].children.includes(fp.split('/').pop()))FS[par].children.push(fp.split('/').pop());}
+        break;
+      }
+      out=text;break;
+    }
+    case 'grep':{
+      const flags=args.filter(a=>a.startsWith('-')).join('');
+      const nonFlags=args.slice(1).filter(a=>!a.startsWith('-'));
+      const pat=nonFlags[0]?.replace(/^["']|["']$/g,'');
+      const file=nonFlags[1];
+      if(!pat){err='grep: missing pattern';break;}
+      const fp=file?rp(file):null;
+      const n=fp?FS[fp]:null;
+      if(fp&&!n){err=`grep: ${file}: No such file or directory`;break;}
+      const content=n?n.content:'';
+      const lines2=content.split('\n');
+      const ci=flags.includes('i'),inv=flags.includes('v'),cnt=flags.includes('c'),ln=flags.includes('n');
+      let matches=lines2.filter(l=>{const m=ci?l.toLowerCase().includes(pat.toLowerCase()):l.includes(pat);return inv?!m:m;});
+      if(cnt)out=String(matches.length);
+      else if(ln)out=matches.map((l,i)=>`${i+1}:${l}`).join('\n');
+      else out=matches.join('\n');
+      break;
+    }
+    case 'wc':{
+      if(!args.includes('-l')){err='wc: only -l is supported here';break;}
+      const farg=args.filter(a=>!a.startsWith('-')).pop();
+      if(!farg){err='wc: missing file';break;}
+      const fp=rp(farg);const n=FS[fp];
+      if(!n){err=`wc: ${farg}: No such file or directory`;break;}
+      out=`${n.content.split('\n').length} ${farg}`;break;
+    }
+    case 'cut':{
+      const dIdx=args.indexOf('-d'),fIdx=args.indexOf('-f');
+      const delim=dIdx>=0?args[dIdx+1]:'\t';
+      const field=fIdx>=0?parseInt(args[fIdx+1])-1:0;
+      const farg=args.filter(a=>!a.startsWith('-')&&args.indexOf(a)>Math.max(dIdx,fIdx)).pop();
+      const fp=farg?rp(farg):null;const n=fp?FS[fp]:null;
+      if(!n){err=`cut: ${farg||'?'}: No such file or directory`;break;}
+      out=n.content.split('\n').map(l=>l.split(delim)[field]||'').filter(Boolean).join('\n');break;
+    }
+    case 'head':{
+      const n2=args.find(a=>a.startsWith('-')&&!isNaN(a.slice(1)))?parseInt(args.find(a=>a.startsWith('-')).slice(1)):10;
+      const farg=args.filter(a=>!a.startsWith('-')).pop();
+      const fp=farg?rp(farg):null;const n=fp?FS[fp]:null;
+      if(!n){err=`head: ${farg||'?'}: No such file or directory`;break;}
+      out=n.content.split('\n').slice(0,n2).join('\n');break;
+    }
+    case 'tail':{
+      const follow=args.includes('-f');
+      const n2=args.find(a=>a.startsWith('-n'))?parseInt(args[args.indexOf('-n')+1]):10;
+      const farg=args.filter(a=>!a.startsWith('-')).pop();
+      const fp=farg?rp(farg):null;const n=fp?FS[fp]:null;
+      if(!n){err=`tail: ${farg||'?'}: No such file or directory`;break;}
+      out=n.content.split('\n').slice(-n2).join('\n');
+      if(follow)out+='\n[Simulated: following file. Ctrl+C to stop in real terminal.]';break;
+    }
+    case 'rm':{
+      const name=args[args.length-1];const fp=rp(name);
+      if(!FS[fp]){err=`rm: cannot remove '${name}': No such file or directory`;break;}
+      if(FS[fp].type==='dir'&&!args.includes('-r')&&!args.includes('-rf')){err=`rm: cannot remove '${name}': Is a directory`;break;}
+      const par=fp.slice(0,fp.lastIndexOf('/'))||'/';
+      if(FS[par])FS[par].children=FS[par].children.filter(c=>c!==fp.split('/').pop());
+      delete FS[fp];break;
+    }
+    case 'cp':{
+      if(args.length<3){err='cp: missing operand';break;}
+      const src=rp(args[1]),dst=rp(args[2]);
+      if(!FS[src]){err=`cp: '${args[1]}': No such file or directory`;break;}
+      FS[dst]={...FS[src],content:FS[src].content};
+      const par=dst.slice(0,dst.lastIndexOf('/'))||'/';
+      if(FS[par]&&!FS[par].children.includes(dst.split('/').pop()))FS[par].children.push(dst.split('/').pop());break;
+    }
+    case 'mv':{
+      if(args.length<3){err='mv: missing operand';break;}
+      let src=rp(args[1]),dst=rp(args[2]);
+      if(!FS[src]){err=`mv: '${args[1]}': No such file or directory`;break;}
+      if(FS[dst]?.type==='dir')dst=norm(dst+'/'+src.split('/').pop());
+      FS[dst]=FS[src];
+      const sp=src.slice(0,src.lastIndexOf('/'))||'/';
+      if(FS[sp])FS[sp].children=FS[sp].children.filter(c=>c!==src.split('/').pop());
+      delete FS[src];
+      const dp=dst.slice(0,dst.lastIndexOf('/'))||'/';
+      if(FS[dp]&&!FS[dp].children.includes(dst.split('/').pop()))FS[dp].children.push(dst.split('/').pop());break;
+    }
+    case 'find':{
+      const dir2=args[1]?rp(args[1]):S.cwd;
+      const ni=args.indexOf('-name');
+      const pattern=ni>=0?args[ni+1].replace(/\*/g,''):'';
+      const results=[];
+      const walk=p=>{const n=FS[p];if(!n)return;if(!pattern||p.split('/').pop().includes(pattern))results.push(p);if(n.type==='dir')n.children.forEach(c=>walk(norm(p+'/'+c)));};
+      walk(dir2);out=results.join('\n');break;
+    }
+    case 'sort':{
+      const farg=args.filter(a=>!a.startsWith('-')).pop();
+      if(!farg||farg==='sort'){break;}
+      const fp=rp(farg);const n=FS[fp];
+      if(!n){err=`sort: ${farg}: No such file or directory`;break;}
+      const ls2=n.content.split('\n').filter(Boolean);
+      const num=args.includes('-n')||args.includes('-rn');const rev=args.includes('-r')||args.includes('-rn');
+      ls2.sort(num?(a,b)=>parseFloat(a)-parseFloat(b):(a,b)=>a.localeCompare(b));
+      if(rev)ls2.reverse();out=ls2.join('\n');break;
+    }
+    case 'uniq':{
+      const farg=args.filter(a=>!a.startsWith('-')).pop();
+      if(!farg){break;}const fp=rp(farg);const n=FS[fp];
+      if(!n){err=`uniq: ${farg}: No such file or directory`;break;}
+      const ls2=n.content.split('\n');out=ls2.filter((l,i)=>l!==ls2[i-1]).join('\n');break;
+    }
+    case 'awk':{
+      const dFlag=args.indexOf('-F');const delim=dFlag>=0?args[dFlag+1]:' ';
+      const farg=args[args.length-1];const fp=rp(farg);const n=FS[fp];
+      if(!n){err=`awk: ${farg}: No such file or directory`;break;}
+      const prog=args.find(a=>a.includes('print'));
+      const ls2=n.content.split('\n').filter(Boolean);
+      if(prog){
+        const pm=prog.match(/\$(\d+)/g);
+        if(pm){
+          const fields=pm.map(f=>parseInt(f.slice(1))-1);
+          out=ls2.map(l=>{const cols=l.split(delim);return fields.map(i=>cols[i]||'').join(' ');}).join('\n');
+        }else out=ls2.join('\n');
+      }else out=ls2.join('\n');break;
+    }
+    case 'sed':{
+      const farg=args[args.length-1];const expr=args.find(a=>a.startsWith('s/'));
+      if(!expr){err='sed: missing expression';break;}
+      const fp=rp(farg);const n=FS[fp];
+      if(!n){err=`sed: ${farg}: No such file or directory`;break;}
+      const m=expr.match(/^s\/(.+?)\/(.+?)\/(g)?$/);
+      if(m){const result=m[3]?n.content.split(m[1]).join(m[2]):n.content.replace(m[1],m[2]);
+        if(args.includes('-i')){n.content=result;}else out=result;}
+      else out=n.content;break;
+    }
+    case 'ps':out=`USER       PID %CPU %MEM COMMAND\nroot         1  0.0  0.1 /sbin/init\nroot       123  0.0  0.0 /usr/sbin/sshd\nuser       456  0.0  0.0 -bash\nuser       789  0.0  0.0 ps aux`;break;
+    case 'bash':case 'sh':{
+      const fp=args[1]?rp(args[1]):null;
+      if(!fp){out='bash: interactive mode (simulated)';break;}
+      const n=FS[fp];
+      if(!n){err=`bash: ${args[1]}: No such file or directory`;break;}
+      out=`[Executing ${args[1]}]\nHello, World!\n${new Date().toString()}`;break;
+    }
+    case 'man':out=args[1]?`${args[1]}(1) — Open the AI Instructor chat (🤖 button) for a full explanation.`:'What manual page do you want?';break;
+    case 'chmod':case 'chown':case 'sudo':case 'apt':case 'apt-get':
+    case 'systemctl':case 'journalctl':case 'ssh':case 'ssh-keygen':
+    case 'ssh-copy-id':case 'scp':case 'rsync':case 'ping':case 'curl':
+    case 'wget':case 'ip':case 'ifconfig':case 'ss':case 'netstat':case 'dig':
+    case 'nslookup':case 'top':case 'htop':case 'kill':case 'killall':
+    case 'pkill':case 'pgrep':case 'lsblk':case 'df':case 'du':
+    case 'mount':case 'fdisk':case 'ufw':case 'last':case 'who':
+      out=getSim(cmd,args);break;
+    default:
+      if(raw.includes('|')){handlePipe(raw);return;}
+      err=`bash: ${cmd}: command not found`;
+  }
+
+  if(out!==null&&out!=='')out.split('\n').forEach(l=>tp('t-out',l));
+  if(err)tp('t-r',err);
+  askHint(raw,out,err);
+}
+
+function handlePipe(raw){
+  const parts=raw.split('|').map(p=>p.trim());
+  tp('t-dim','[pipe: '+parts.map(p=>p.split(' ')[0]).join(' | ')+']');
+  const last=parts[parts.length-1];const lcmd=last.split(/\s+/)[0];
+  const pat=last.split(/\s+/)[1];
+  if(lcmd==='grep'&&pat)tp('t-out',`(lines matching "${pat.replace(/['"]/g,'')}") → use individual commands to see output`);
+  else if(lcmd==='wc')tp('t-out','(count of lines from previous command)');
+  else if(lcmd==='sort')tp('t-out','(sorted output)');
+  else if(lcmd==='head'||lcmd==='tail')tp('t-out','(first/last N lines)');
+  else if(lcmd==='awk')tp('t-out','(field-processed output)');
+  else if(lcmd==='cut')tp('t-out','(extracted columns)');
+  else tp('t-out','(pipe output)');
+  askHint(raw,null,null);
+}
+
+async function askHint(cmd,out,err){
+  const bar=document.getElementById('tHint');
+  bar.className='t-ai';bar.textContent='// Analyzing...';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:100,
+        system:'You are a concise Linux instructor. In 1-2 sentences explain what the command does or why an error occurred. No markdown.',
+        messages:[{role:'user',content:`Command: ${cmd}\nOutput: ${out||err||'(none)'}`}]})
+    });
+    const d=await r.json();
+    bar.className='t-ai lit';bar.textContent='→ '+(d.content?.[0]?.text||'');
+  }catch(e){bar.className='t-ai';bar.textContent=`// ${cmd} executed`;}
+}
+
+// ── AI CHAT ───────────────────────────────────────────────────
+function toggleChat(){
+  S.chatOpen=!S.chatOpen;
+  document.getElementById('chatPanel').classList.toggle('open',S.chatOpen);
+  document.getElementById('chatTgl').classList.toggle('hidden',S.chatOpen);
+  if(S.chatOpen&&!document.getElementById('chatMsgs').children.length){
+    addAI("Hello! I'm your AI Instructor. Ask me anything about Linux — commands, concepts, configuration, or troubleshooting. I'll tailor my explanations to what you're currently studying.");
+  }
+}
+function addAI(text){
+  const c=document.getElementById('chatMsgs'),d=document.createElement('div');
+  d.className='cm';
+  d.innerHTML=`<div class="cm-av ai">LF</div><div class="cm-body"><div class="cm-name">AI Instructor · ${new Date().toLocaleTimeString()}</div><div class="cm-text">${fmt(text)}</div></div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function addUser(text){
+  const c=document.getElementById('chatMsgs'),d=document.createElement('div');
+  d.className='cm';
+  d.innerHTML=`<div class="cm-av user">U</div><div class="cm-body"><div class="cm-name">You · ${new Date().toLocaleTimeString()}</div><div class="cm-text">${esc(text)}</div></div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function addTyping(){
+  const c=document.getElementById('chatMsgs'),d=document.createElement('div');
+  d.className='cm';d.id='typing';
+  d.innerHTML=`<div class="cm-av ai">LF</div><div class="cm-body"><div class="t-ind"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div></div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function rmTyping(){document.getElementById('typing')?.remove();}
+function fmt(t){
+  return t.replace(/```[\w]*([\s\S]*?)```/g,'<pre>$1</pre>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n/g,'<br>');
+}
+async function sendChat(){
+  const inp=document.getElementById('chatInp');
+  const text=inp.value.trim();
+  if(!text||S.aiThinking)return;
+  inp.value='';inp.style.height='auto';
+  S.aiThinking=true;document.getElementById('chatSend').disabled=true;
+  addUser(text);addTyping();
+  S.chatHist.push({role:'user',content:text});
+  const L=LESSONS[S.lesson];
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,
+        system:`You are an expert Linux instructor at the Linux Foundation. The student is studying: "${L?.title||'Linux'}". Give precise, professional answers. Use backticks for commands, triple backtick blocks for multi-line examples. Be thorough but concise. No excessive bullet points.`,
+        messages:S.chatHist.slice(-14)})
+    });
+    const d=await r.json();
+    const reply=d.content?.[0]?.text||'Connection error.';
+    rmTyping();addAI(reply);S.chatHist.push({role:'assistant',content:reply});
+  }catch(e){rmTyping();addAI('Network error — check your connection.');}
+  S.aiThinking=false;document.getElementById('chatSend').disabled=false;
+  document.getElementById('chatInp').focus();
+}
+function hck(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}
+  const ta=e.target;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,100)+'px';
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+buildSidebar();
+loadLesson('filesystem');
+initTerm();
+
+</script>
+</body>
+</html>
